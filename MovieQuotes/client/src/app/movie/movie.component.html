@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <a routerLink="/movie/new"  class="btn btn-primary">Add Movie</a>
+    </div>
+    <div class="col-sm">
+      <div class="input-group mb-3">
+        <input type="text" [(ngModel)]="search.title" class="form-control" placeholder="Search by Title" aria-label="Recipient's username" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" (click)="findByTitle(search.title)" type="button">Search</button>
+        </div>
+      </div>      
+    </div>
+    <div class="col-sm">
+      <div class="input-group mb-3">
+        <input type="text" [(ngModel)]="search.year"  class="form-control" placeholder="Search by Year" aria-label="Recipient's username" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" (click)="findByYear(search.year)" type="button">Search</button>
+        </div>
+      </div>      
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Movie List</h5>
+          <ul class="list-group">
+            <li (click)="selectMovie(m)" *ngFor="let m of movies" class="list-group-item" [ngClass]="{'active': movie && movie.id==m.id}" >
+                <div class="row">
+                    <div class="col-sm">
+                        {{m.title}}
+                    </div>
+                    <div *ngIf="movie && movie.id==m.id" class="btn btn-danger" class="col-sm-4">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-secondary">Edit</button>
+                            <button type="button" (click)="deleteMovie(m.id)" class="btn btn-danger">Delete</button>
+                        </div>  
+                    </div>
+                  </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div *ngIf="movie" class="card">
+        <div class="card-body">
+          <p>Title:{{movie.title}}</p>
+          <p>Year:{{movie.year}}</p>
+          <h3>Quotes:</h3>
+          <ul class="list-group">
+              <li (click)="selectMovie(movie)" *ngFor="let movie of movies" class="list-group-item">
+                {{movie.title}}
+              </li>
+          </ul>
+          <app-quote-create [movieId]="movie.id" ></app-quote-create>
+        </div>
+        <div class="card-footer text-muted">
+          <button type="button" data-toggle="modal" data-target="#QuoteModal" class="btn btn-primary">Add Quote</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
