@@ -26,13 +26,15 @@ export class MovieComponent implements OnInit {
     this.loadMovies()
   }
   loadMovies(params=null){
-    this.service.getMovies(params).subscribe(results=>this.movies=results)
+    this.service.getMovies(params).subscribe(results=>{
+      this.movies=results
+      this.movie=null
+    })
   }
   deleteMovie(id){
     if(confirm("Delete this movie?")){
       this.service.deleteMovie(id).subscribe(_=>{
         this.loadMovies()
-        this.movie=null
       })
     }
   }

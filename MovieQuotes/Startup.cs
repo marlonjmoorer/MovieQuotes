@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using MovieQuotes.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using MovieQuotes.Handlers;
+using MovieQuotes.Services;
 
 namespace MovieQuotes
 {
@@ -38,7 +40,8 @@ namespace MovieQuotes
             });
             var connString = Configuration.GetConnectionString("MovieDb");
             services.AddEntityFrameworkSqlite()
-            .AddDbContext<MovieContext>(options => options.UseSqlite(connString));
+            .AddDbContext<MovieContext>(options => options.UseSqlite(connString))
+            .AddScoped<IMovieService,MovieService>();
 
         }
 
@@ -49,12 +52,14 @@ namespace MovieQuotes
             UpdateDatabase(app);
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+               // app.UseDeveloperExceptionPage();
+                app.UseMiddleware<ExceptionHandler>();
             }
             else
             {
                 app.UseHsts();
             }
+            
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

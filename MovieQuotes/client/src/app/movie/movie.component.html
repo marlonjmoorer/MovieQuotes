@@ -35,8 +35,7 @@
                         {{m.title}}
                     </div>
                     <div *ngIf="movie && movie.id==m.id" class="btn btn-danger" class="col-sm-4">
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-secondary">Edit</button>
+                        <div class="btn-group" role="group" >
                             <button type="button" (click)="deleteMovie(m.id)" class="btn btn-danger">Delete</button>
                         </div>  
                     </div>

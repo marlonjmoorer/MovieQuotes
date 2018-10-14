@@ -6,68 +6,52 @@ using Microsoft.AspNetCore.Mvc;
 using MovieQuotes.Data;
 using MovieQuotes.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using MovieQuotes.Services;
 
 namespace MovieQuotes.Controllers
 {
     [Route("api/[controller]")]
     public class MoviesController : Controller
     {
-        private MovieContext movieContext;
+        private IMovieService movieService;
 
-        public MoviesController(MovieContext movieContext){
-            this.movieContext = movieContext;
+        public MoviesController(IMovieService service){
+            this.movieService=service;
         }
-        // GET: api/values
+      
         [HttpGet]
         public ActionResult<IEnumerable<Movie>> Get([FromQuery(Name = "title")] string title=null,[FromQuery(Name = "year")] string year=null)
         {
-          
-            var query=movieContext.Movies.AsQueryable();
-            if(!String.IsNullOrEmpty(title)){
-                query=query.Where(m=>m.Title.Contains(title));
-            }
-            if(!String.IsNullOrEmpty(year)){
-                query=query.Where(m=>m.Year==year);
-            }
-            return query.ToList();
+            return movieService.GetFilteredMovies(title,year).ToList();
         }
 
-        // GET api/values/5
+      
         [HttpGet("{id}")]
         public ActionResult<Movie> Get(int id)
         {
-            var movie= movieContext.Movies
-                .Include(m=>m.Quotes)
-                .SingleOrDefault(m=>m.Id==id);
+            var movie= movieService.GetMovieById(id);
             return movie;
+                    
         }
 
-        // POST api/values
+     
         [HttpPost]
-        public IActionResult Post([FromBody]Movie value)
+        public IActionResult Post([FromBody]Movie movie)
         {
-            var movie=movieContext.Add(value);
-            movieContext.SaveChanges();
-            return Ok(new{id =1,message="Success"});
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-            var movie=movieContext.Movies.Find(id);
-            if(movie!=null){
-                movieContext.Movies.Remove(movie);
-                movieContext.SaveChanges();
+            if(movieService.AddMovie(movie)){
+                 return Json(new{message="Success"});
             }
-            
+            return Json(new{message="Failure"});
+        }
 
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            if(movieService.DeleteMovie(id)){
+                 return Json(new{message="Success"});
+            }
+            return Json(new{message="Failure"});
         }
     }
 }
