@@ -19,9 +19,13 @@ namespace MovieQuotes.Controllers
             this.movieContext = movieContext;
         }
         [Route("random")]
-         public ActionResult<Quote> Random()
+         public ActionResult<IEnumerable<Quote>> Random()
         {
-            return movieContext.Quotes.OrderBy(_=> new Random().Next() ).First();
+            return movieContext.Quotes
+            .Include(q=>q.Movie)
+            .OrderBy(q=> new Random().Next())
+            .Take(5)
+            .ToList();
         }
         [HttpGet]
         public ActionResult<IEnumerable<Quote>> Get()

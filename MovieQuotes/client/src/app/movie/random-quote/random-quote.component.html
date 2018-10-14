@@ -1,0 +1,17 @@
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#random">Get Random Quote</button>
+
+<div class="modal fade" id="random" tabindex="-1" role="dialog"  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    
+    <div class="modal-content">
+        <div *ngFor="let quote of quotes" class="card">
+            <div class="card-body">
+              <h5 class="card-title" >{{quote.movie.title}} - {{quote.movie.year}}</h5>
+              
+              <h2 class="card-text">"{{quote.text}}"</h2>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+

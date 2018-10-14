@@ -37,4 +37,9 @@ export class MovieService {
       return   Observable.throw(null);
     }))
   }
+  getRandomQuotes():Observable<Quote[]>{
+    return this.http.get<Quote[]>("/api/quotes/random").pipe(catchError((err,c)=>{
+      return   Observable.throw(null);
+    }))
+  }
 }
