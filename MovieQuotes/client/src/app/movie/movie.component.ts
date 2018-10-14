@@ -36,9 +36,9 @@ export class MovieComponent implements OnInit {
       })
     }
   }
-  selectMovie(movie:Movie){
-    console.log(movie)
-    this.movie=movie
+  selectMovie(id){
+    console.log(id)
+    this.service.getMovieById(id).subscribe(movie=>this.movie=movie)
   }
 
 }

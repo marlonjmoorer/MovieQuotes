@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MovieQuotes.Data;
 using MovieQuotes.Data.Models;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.EntityFrameworkCore;
 
 namespace MovieQuotes.Controllers
 {
@@ -22,6 +21,7 @@ namespace MovieQuotes.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Movie>> Get([FromQuery(Name = "title")] string title=null,[FromQuery(Name = "year")] string year=null)
         {
+          
             var query=movieContext.Movies.AsQueryable();
             if(!String.IsNullOrEmpty(title)){
                 query=query.Where(m=>m.Title.Contains(title));
@@ -36,7 +36,10 @@ namespace MovieQuotes.Controllers
         [HttpGet("{id}")]
         public ActionResult<Movie> Get(int id)
         {
-            return movieContext.Movies.Find(id);
+            var movie= movieContext.Movies
+                .Include(m=>m.Quotes)
+                .SingleOrDefault(m=>m.Id==id);
+            return movie;
         }
 
         // POST api/values

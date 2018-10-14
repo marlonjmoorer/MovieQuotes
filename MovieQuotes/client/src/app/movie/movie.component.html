@@ -26,7 +26,7 @@
         <div class="card-body">
           <h5 class="card-title">Movie List</h5>
           <ul class="list-group">
-            <li (click)="selectMovie(m)" *ngFor="let m of movies" class="list-group-item" [ngClass]="{'active': movie && movie.id==m.id}" >
+            <li (click)="selectMovie(m.id)" *ngFor="let m of movies" class="list-group-item" [ngClass]="{'active': movie && movie.id==m.id}" >
                 <div class="row">
                     <div class="col-sm">
                         {{m.title}}
@@ -50,11 +50,11 @@
           <p>Year:{{movie.year}}</p>
           <h3>Quotes:</h3>
           <ul class="list-group">
-              <li (click)="selectMovie(movie)" *ngFor="let movie of movies" class="list-group-item">
-                {{movie.title}}
+              <li (click)="selectMovie(movie)" *ngFor="let quote of movie.quotes" class="list-group-item">
+                {{quote.text}}
               </li>
           </ul>
-          <app-quote-create [movieId]="movie.id" ></app-quote-create>
+          <app-quote-create (created)='selectMovie($event)' [movieId]="movie.id" ></app-quote-create>
         </div>
         <div class="card-footer text-muted">
           <button type="button" data-toggle="modal" data-target="#QuoteModal" class="btn btn-primary">Add Quote</button>

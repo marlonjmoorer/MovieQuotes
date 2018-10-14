@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MovieQuotes.Data;
 using MovieQuotes.Data.Models;
-
+using Microsoft.EntityFrameworkCore;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace MovieQuotes.Controllers
 {
-    [Route("api/movies/{movieId:int}/[controller]")]
+    [Route("api/[controller]")]
     public class QuotesController : Controller
     {
         private MovieContext movieContext;
@@ -18,27 +18,34 @@ namespace MovieQuotes.Controllers
         public QuotesController(MovieContext movieContext){
             this.movieContext = movieContext;
         }
-        // GET: api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<Movie>> Get()
+        [Route("random")]
+         public ActionResult<Quote> Random()
         {
-            return movieContext.Movies.ToList();
+            return movieContext.Quotes.OrderBy(_=> new Random().Next() ).First();
+        }
+        [HttpGet]
+        public ActionResult<IEnumerable<Quote>> Get()
+        {
+            return movieContext.Quotes.ToList();
         }
 
-        // GET api/values/5
+        
         [HttpGet("{id}")]
         public ActionResult<Movie> Get(int id)
         {
             return movieContext.Movies.Find(id);
         }
 
-        // POST api/values
+       
         [HttpPost]
-        public IActionResult Post([FromBody]Movie value)
+        public IActionResult Post([FromBody]Quote value)
         {
-            var movie=movieContext.Add(value);
+            var movie= movieContext.Movies
+                .Include(m=>m.Quotes)
+                .SingleOrDefault(m=>m.Id==value.MovieId);
+            movie?.Quotes.Add(value);
             movieContext.SaveChanges();
-            return Ok(new{id =1,message="Success"});
+            return Json(new{message="Success"});
         }
 
         // PUT api/values/5
