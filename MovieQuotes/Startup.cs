@@ -109,11 +109,7 @@ namespace MovieQuotes
                     spa.UseProxyToSpaDevelopmentServer(url);
                 }
             });
-             app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials());
+            
             app.UseAuthentication();
            
 
