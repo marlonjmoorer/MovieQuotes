@@ -7,6 +7,7 @@ using MovieQuotes.Data;
 using MovieQuotes.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using MovieQuotes.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MovieQuotes.Controllers
 {

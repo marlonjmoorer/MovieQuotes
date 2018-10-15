@@ -14,9 +14,9 @@ namespace MovieQuotes.Controllers
     [Route("api/[controller]")]
     public class QuotesController : Controller
     {
-        private MovieService movieService;
+        private IMovieService movieService;
 
-        public QuotesController(MovieService movieService){
+        public QuotesController(IMovieService movieService){
             this.movieService=movieService;
         }
         [Route("random")]

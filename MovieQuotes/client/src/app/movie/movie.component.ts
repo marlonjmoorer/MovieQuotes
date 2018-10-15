@@ -10,7 +10,7 @@ import { MovieService } from '../Services/movie.service';
 export class MovieComponent implements OnInit {
   movies=[]
   movie:Movie=null
-  search={title:null,year:null}
+  search={title:'',year:''}
   constructor(private service:MovieService) { 
       
   }

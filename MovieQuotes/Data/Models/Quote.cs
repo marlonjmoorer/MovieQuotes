@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace MovieQuotes.Data.Models
 {
     public class Quote
@@ -8,7 +10,8 @@ namespace MovieQuotes.Data.Models
         }
         public int Id { get; set; }
         public string Text { get; set; }
-
+        
+        [Required]
         public int MovieId { get; set; }
 
         public Movie Movie {get;set;}

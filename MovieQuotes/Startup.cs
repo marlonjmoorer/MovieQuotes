@@ -16,6 +16,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using MovieQuotes.Handlers;
 using MovieQuotes.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace MovieQuotes
 {
@@ -39,9 +42,35 @@ namespace MovieQuotes
                 c.RootPath = "client/dist";
             });
             var connString = Configuration.GetConnectionString("MovieDb");
+            var secret=Configuration.GetValue<String>("secret");
             services.AddEntityFrameworkSqlite()
             .AddDbContext<MovieContext>(options => options.UseSqlite(connString))
-            .AddScoped<IMovieService,MovieService>();
+            .AddScoped<IMovieService,MovieService>()
+            .AddScoped<IUserService,UserService>(provider=>{
+                var context=(MovieContext)provider.GetService(typeof(MovieContext));
+                return new UserService(context,secret);
+            });
+            var key = Encoding.UTF8.GetBytes(secret);
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(opt =>
+            {
+                opt.RequireHttpsMetadata = false;
+                opt.SaveToken = true;
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "http://localhost:5000",
+                    ValidAudience = "http://localhost:5000",
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
+            });
 
         }
 
@@ -80,6 +109,12 @@ namespace MovieQuotes
                     spa.UseProxyToSpaDevelopmentServer(url);
                 }
             });
+             app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+            app.UseAuthentication();
            
 
         }

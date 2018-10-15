@@ -9,6 +9,8 @@ namespace MovieQuotes.Data
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Quote> Quotes { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
         public MovieContext(DbContextOptions<MovieContext> options):base(options)
         {
         }

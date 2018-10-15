@@ -10,6 +10,7 @@ declare var $:any
 export class RandomQuoteComponent implements OnInit {
 
   quotes:Quote[]
+
   constructor(private service:MovieService,private ngZone: NgZone) { }
 
   ngOnInit() {
@@ -20,8 +21,7 @@ export class RandomQuoteComponent implements OnInit {
   loadQuote(){
     this.service.getRandomQuotes().subscribe(quotes=>{
       this.ngZone.run( () => {
-        console.log(quotes)
-        this.quotes=quotes
+          this.quotes=quotes
       })
     })
   }
